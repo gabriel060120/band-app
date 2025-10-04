@@ -1,3 +1,4 @@
+import 'package:band_app/ui/chiper_webview/widgets/chiper_webview_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ChiperWebviewScreen(url: 'https://www.cifraclub.com.br/louvor-iir/fogo-em-teus-olhos/#key=0'),
     );
   }
 }
