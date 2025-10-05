@@ -14,6 +14,8 @@ class RepertoireDayScreen extends StatefulWidget {
 class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
   final viewModel = RepertoireDayViewModel(repertoireDayRepository: RepertoireDayRepository());
 
+  final PageController _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,14 +31,45 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
               ),
             );
           }
-          return ListenableBuilder(
-            listenable: viewModel,
-            builder: (context, _) {
-              return PageView(
-                // index: viewModel.pageIndex,
-                children: viewModel.chipers.map((url) => ChiperWebviewScreen(url: url)).toList(),
-              );
-            }
+          return SafeArea(
+            top: false,
+            child: ListenableBuilder(
+              listenable: viewModel,
+              builder: (context, _) {
+                return  Column(
+                  children: [
+                    Expanded(
+                      child: PageView(
+                        // index: viewModel.pageIndex,
+                        controller: _pageController,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: viewModel.chipers.map((url) => ChiperWebviewScreen(url: url)).toList(),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: viewModel.pageIndex > 0 ? () {
+                            viewModel.previousPage();
+                            _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                          } : null,
+                        ),
+                        Text('${viewModel.pageIndex + 1} / ${viewModel.totalPages}'),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward),
+                          onPressed: viewModel.pageIndex < viewModel.totalPages - 1 ? () {
+                            viewModel.nextPage();
+                            _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                          } : null,
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }
+            ),
           );
         }
       ),
