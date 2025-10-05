@@ -1,4 +1,8 @@
+import 'package:band_app/data/repositories/repertoire_day/repertoire_day_repository.dart';
+import 'package:band_app/ui/chiper_webview/widgets/chiper_webview_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../view_model/repertoire_day_view_model.dart';
 
 class RepertoireDayScreen extends StatefulWidget {
   const RepertoireDayScreen({super.key});
@@ -8,12 +12,42 @@ class RepertoireDayScreen extends StatefulWidget {
 }
 
 class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
-  
+  final viewModel = RepertoireDayViewModel(repertoireDayRepository: RepertoireDayRepository());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, _) {
+          if(viewModel.loadRepertoire.running) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          else if(viewModel.loadRepertoire.error) {
+            return Center(
+                child: Text('Ocorreu um erro!'
+              ),
+            );
+          }
+          return GestureDetector(
+            onHorizontalDragEnd: (details){
+              if (details.primaryVelocity! > 0) {
+                viewModel.previousPage();
+              } else if (details.primaryVelocity! < 0) {
+                viewModel.nextPage();
+              }
+            },
+            child: ListenableBuilder(
+              listenable: viewModel,
+              builder: (context, _) {
+                return IndexedStack(
+                  index: viewModel.pageIndex,
+                  children: viewModel.chipers.map((url) => ChiperWebviewScreen(url: url)).toList(),
+                );
+              }
+            ),
+          );
+        }
       ),
     );
   }
