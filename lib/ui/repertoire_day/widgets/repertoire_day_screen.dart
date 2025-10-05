@@ -29,23 +29,14 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
               ),
             );
           }
-          return GestureDetector(
-            onHorizontalDragEnd: (details){
-              if (details.primaryVelocity! > 0) {
-                viewModel.previousPage();
-              } else if (details.primaryVelocity! < 0) {
-                viewModel.nextPage();
-              }
-            },
-            child: ListenableBuilder(
-              listenable: viewModel,
-              builder: (context, _) {
-                return IndexedStack(
-                  index: viewModel.pageIndex,
-                  children: viewModel.chipers.map((url) => ChiperWebviewScreen(url: url)).toList(),
-                );
-              }
-            ),
+          return ListenableBuilder(
+            listenable: viewModel,
+            builder: (context, _) {
+              return PageView(
+                // index: viewModel.pageIndex,
+                children: viewModel.chipers.map((url) => ChiperWebviewScreen(url: url)).toList(),
+              );
+            }
           );
         }
       ),
