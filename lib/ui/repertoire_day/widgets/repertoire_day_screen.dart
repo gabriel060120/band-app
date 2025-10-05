@@ -8,8 +8,13 @@ class RepertoireDayScreen extends StatefulWidget {
 }
 
 class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
+  
   @override
   Widget build(BuildContext context) {
-    return IndexedStack();
+    return Scaffold(
+      body: IndexedStack(
+
+      ),
+    );
   }
 }
