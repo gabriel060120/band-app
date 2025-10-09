@@ -1,3 +1,8 @@
 {
+    "editor.minimap.maxColumn": 200,
+    "editor.formatOnSave": true,
+    "[dart]": {
+        "editor.formatOnSave": true
+    },
     "dart.flutterSdkPath": "/Users/gabriel/fvm/versions/3.35.0"
 }

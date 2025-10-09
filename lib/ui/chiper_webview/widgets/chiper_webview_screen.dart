@@ -10,7 +10,6 @@ class ChiperWebviewScreen extends StatefulWidget {
 }
 
 class _ChiperWebviewScreenState extends State<ChiperWebviewScreen> {
-  
   late InAppWebViewController webView;
   double progress = 0;
   String url = "";
@@ -61,12 +60,12 @@ class _ChiperWebviewScreenState extends State<ChiperWebviewScreen> {
                   //   ),
                   // ),
                   initialUrlRequest: URLRequest(
-                      url: WebUri.uri(Uri.parse(widget.url)),
-                      // headers: widget.shortToken != null
-                          // ? {"Authorization": widget.shortToken!}
-                          // : {},
-                          ),
-                  onWebViewCreated: (controller){
+                    url: WebUri.uri(Uri.parse(widget.url)),
+                    // headers: widget.shortToken != null
+                    // ? {"Authorization": widget.shortToken!}
+                    // : {},
+                  ),
+                  onWebViewCreated: (controller) {
                     webView = controller;
                   },
                   onLoadStop: (controller, url) async {
@@ -74,12 +73,12 @@ class _ChiperWebviewScreenState extends State<ChiperWebviewScreen> {
                       _loading = false;
                     });
                   },
-                  shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  // shouldOverrideUrlLoading: (controller, navigationAction) async {
                   // if (!navigationAction.request.url.toString().contains('tv-free.vercel.app')) {
                   //   return NavigationActionPolicy.CANCEL;
                   // }
                   // return NavigationActionPolicy.ALLOW;
-                },
+                  // },
                   onReceivedError: (controller, request, error) {
                     if (error.description == 'net::ERR_UNKNOWN_URL_SCHEME') {
                     } else {
@@ -101,10 +100,7 @@ class _ChiperWebviewScreenState extends State<ChiperWebviewScreen> {
                       child: SizedBox(
                         height: 50,
                         width: 50,
-                        child: SizedBox(
-                          child: CircularProgressIndicator(
-                              ),
-                        ),
+                        child: SizedBox(child: CircularProgressIndicator()),
                       ),
                     ),
                   ),
