@@ -1,4 +1,5 @@
 import 'package:band_app/ui/repertoire_day/widgets/repertoire_day_screen.dart';
+import 'package:band_app/ui/splash/widgets/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,11 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: RepertoireDayScreen(),
+      home: const SplashScreen(nextScreen: RepertoireDayScreen()),
     );
   }
 }
