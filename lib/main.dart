@@ -1,21 +1,33 @@
-import 'package:band_app/ui/repertoire_day/widgets/repertoire_day_screen.dart';
-import 'package:band_app/ui/splash/widgets/splash_screen.dart';
+import 'package:band_app/config/config.dart';
+import 'package:band_app/ui/splash/splash_module.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'routing/routing.dart';
 
 void main() {
-  runApp(const MyApp());
+  registerCore();
+
+  final modules = <FeatureModule>[SplashModule()];
+  for (final module in modules) {
+    module.register(di);
+  }
+  final router = buildRouter(modules);
+
+  runApp(MyApp(router: router));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.router});
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
+      title: 'Band APP',
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(nextScreen: RepertoireDayScreen()),
+      routerConfig: router,
     );
   }
 }

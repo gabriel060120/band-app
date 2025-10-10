@@ -5,6 +5,7 @@ class RepertoireDayRepository {
     try {
       List<String> days = [
         'https://www.cifraclub.com.br/jefferson-e-suellen/vem-me-buscar/#tabs=false&instrument=keyboard&key=5',
+        'https://www.cifraclub.com.br/coral-kemuel/oh-quao-lindo-esse-nome-/#key=8&capo=0',
         'https://www.cifraclub.com.br/paulo-cesar-baruk/clamo-jesus/#tabs=false&instrument=keyboard',
       ];
       return Result.ok(days);

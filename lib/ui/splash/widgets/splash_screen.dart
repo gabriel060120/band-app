@@ -6,8 +6,7 @@ class SplashScreen extends StatefulWidget {
   // widget para navegar após a splash (opcional)
   final Widget? nextScreen;
 
-  const SplashScreen({Key? key, this.durationMs = 1800, this.nextScreen})
-    : super(key: key);
+  const SplashScreen({super.key, this.durationMs = 1800, this.nextScreen});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
