@@ -1,16 +1,22 @@
+import 'package:band_app/data/services/api/api_client.dart';
 import 'package:band_app/utils/result.dart';
 
 class RepertoireDayRepository {
+  final ApiClient supabase;
+
+  RepertoireDayRepository(this.supabase);
+
   Future<Result<List<String>>> fetchRepertoireDays() async {
     try {
-      List<String> days = [
-        'https://www.cifraclub.com.br/jefferson-e-suellen/vem-me-buscar/#tabs=false&instrument=keyboard&key=5',
-        'https://www.cifraclub.com.br/coral-kemuel/oh-quao-lindo-esse-nome-/#key=8&capo=0',
-        'https://www.cifraclub.com.br/paulo-cesar-baruk/clamo-jesus/#tabs=false&instrument=keyboard',
-      ];
-      return Result.ok(days);
+      final data = await supabase.client
+          .from('repertoire_day')
+          .select('chiper')
+          .order('order');
+      return Result.ok(
+        data.map<String>((element) => element['chiper']).toList(),
+      );
     } catch (e) {
-      return Result.error(Exception());
+      return Result.error(Exception('Erro na busca do DB'));
     }
   }
 }

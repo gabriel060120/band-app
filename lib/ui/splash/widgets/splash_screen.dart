@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   // tempo total da animação em milissegundos
@@ -70,14 +71,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _goNext() {
     if (!mounted) return;
-    if (widget.nextScreen != null) {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => widget.nextScreen!));
-    } else {
-      // se não houver tela, apenas remove a splash
-      Navigator.of(context).maybePop();
-    }
+    context.go('/repertoire-day');
   }
 
   @override
