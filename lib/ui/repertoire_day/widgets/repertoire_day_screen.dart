@@ -3,7 +3,6 @@ import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class RepertoireDayScreen extends StatefulWidget {
   const RepertoireDayScreen({super.key});
@@ -13,10 +12,11 @@ class RepertoireDayScreen extends StatefulWidget {
 }
 
 class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
-  final cubit = GetIt.I<RepertoireDayCubit>();
+  late final RepertoireDayCubit cubit;
 
   @override
   void initState() {
+    cubit = context.read<RepertoireDayCubit>();
     super.initState();
     cubit.fetchRepertoireDays();
   }
