@@ -1,22 +1,38 @@
+import 'package:band_app/domain/models/lyrics/lyrics.dart';
+import 'package:band_app/domain/models/repertoire_day/repertoire_day.dart';
+
 class RepertoireDayState {}
 
 class RepertoireDayInitial extends RepertoireDayState {}
 
 class RepertoireDayLoading extends RepertoireDayState {}
 
-class RepertoireDayLoaded extends RepertoireDayState {
-  final List<String> chipers;
-  final int index;
-  RepertoireDayLoaded(this.chipers, this.index);
+class RepertoireDaySelectTypeState extends RepertoireDayState {
+  final RepertoireDay repertoireDay;
+  RepertoireDaySelectTypeState(this.repertoireDay);
 
-  RepertoireDayLoaded copyWith({
-    List<String>? chipers,
-    int? index,
-  }) {
-    return RepertoireDayLoaded(
-      chipers ?? this.chipers,
-      index ?? this.index,
-    );
+  RepertoireDaySelectTypeState copyWith({RepertoireDay? repertoireDay}) {
+    return RepertoireDaySelectTypeState(repertoireDay ?? this.repertoireDay);
+  }
+}
+
+class RepertoireDayLyricsState extends RepertoireDayState {
+  final List<Lyrics> lyrics;
+  final int index;
+  RepertoireDayLyricsState(this.lyrics, this.index);
+
+  RepertoireDayLyricsState copyWith({List<Lyrics>? lyrics, int? index}) {
+    return RepertoireDayLyricsState(lyrics ?? this.lyrics, index ?? this.index);
+  }
+}
+
+class RepertoireDayCipherState extends RepertoireDayState {
+  final List<String> cipher;
+  final int index;
+  RepertoireDayCipherState(this.cipher, this.index);
+
+  RepertoireDayCipherState copyWith({List<String>? cipher, int? index}) {
+    return RepertoireDayCipherState(cipher ?? this.cipher, index ?? this.index);
   }
 }
 

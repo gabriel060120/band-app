@@ -1,13 +1,13 @@
 import 'package:band_app/data/services/api/api_client.dart';
-import 'package:band_app/domain/models/repertoire_day/repertoire_day.dart';
+import 'package:band_app/domain/models/lyrics/lyrics.dart';
 import 'package:band_app/utils/result.dart';
 
-class RepertoireDayRepository {
+class LyricsRepository {
   final ApiClient supabase;
 
-  RepertoireDayRepository(this.supabase);
+  LyricsRepository(this.supabase);
 
-  Future<Result<RepertoireDay>> fetchRepertoireDays() async {
+  Future<Result<List<Lyrics>>> fetchLyrics() async {
     try {
       final nowIso = DateTime.now().toUtc().toIso8601String();
       final response = await supabase.client
@@ -21,8 +21,7 @@ class RepertoireDayRepository {
       music(
         id,
         name,
-        lyrics(*),
-        cipher(*)
+        lyrics(*)
       )
     )
   ''')
@@ -30,8 +29,10 @@ class RepertoireDayRepository {
           .order('date', ascending: true)
           .limit(1);
 
-      final day = response.first;
-      return Result.ok(RepertoireDay.fromMap(day));
+      final day = response.first['lyrics'];
+      return Result.ok(
+        day.map<String>((music) => Lyrics.fromMap(music)).toList(),
+      );
     } catch (e) {
       return Result.error(Exception('Erro na busca do DB'));
     }

@@ -4,21 +4,48 @@ import 'package:band_app/utils/result.dart';
 import 'package:bloc/bloc.dart';
 
 class RepertoireDayCubit extends Cubit<RepertoireDayState> {
-  RepertoireDayCubit(this._repertoireDayRepository) : super(RepertoireDayInitial());
-    final RepertoireDayRepository _repertoireDayRepository;
+  RepertoireDayCubit(this._repertoireDayRepository)
+    : super(RepertoireDayInitial());
+  final RepertoireDayRepository _repertoireDayRepository;
 
-    Future<void> fetchRepertoireDays() async {
-      final result = await _repertoireDayRepository.fetchRepertoireDays();
-      result.fold((r) {
-        emit(RepertoireDayLoaded(r, 0));
-      }, (l) {
+  Future<void> fetchRepertoireDays() async {
+    final result = await _repertoireDayRepository.fetchRepertoireDays();
+    result.fold(
+      (r) {
+        emit(RepertoireDaySelectTypeState(r));
+      },
+      (l) {
         emit(RepertoireDayError('Talvez você não esteja conectado à internet'));
-      });
+      },
+    );
+  }
+
+  Future<void> selectRepertoireType(int index) async {
+    if (index == 0) {
+      emit(
+        RepertoireDayLyricsState(
+          (state as RepertoireDaySelectTypeState).repertoireDay.lyrics,
+          0,
+        ),
+      );
+    } else {
+      emit(
+        RepertoireDayCipherState(
+          (state as RepertoireDaySelectTypeState).repertoireDay.ciphers,
+          0,
+        ),
+      );
+    }
   }
 
   void previousPage() {
-    if (state is RepertoireDayLoaded) {
-      final currentState = state as RepertoireDayLoaded;
+    if (state is RepertoireDayCipherState) {
+      final currentState = state as RepertoireDayCipherState;
+      if (currentState.index > 0) {
+        emit(currentState.copyWith(index: currentState.index - 1));
+      }
+    } else {
+      final currentState = state as RepertoireDayLyricsState;
       if (currentState.index > 0) {
         emit(currentState.copyWith(index: currentState.index - 1));
       }
@@ -26,12 +53,16 @@ class RepertoireDayCubit extends Cubit<RepertoireDayState> {
   }
 
   void nextPage() {
-    if (state is RepertoireDayLoaded) {
-      final currentState = state as RepertoireDayLoaded;
-      if (currentState.index < currentState.chipers.length - 1) {
+    if (state is RepertoireDayCipherState) {
+      final currentState = state as RepertoireDayCipherState;
+      if (currentState.index < currentState.cipher.length - 1) {
+        emit(currentState.copyWith(index: currentState.index + 1));
+      }
+    } else {
+      final currentState = state as RepertoireDayLyricsState;
+      if (currentState.index < currentState.lyrics.length - 1) {
         emit(currentState.copyWith(index: currentState.index + 1));
       }
     }
   }
-
 }

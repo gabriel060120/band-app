@@ -1,6 +1,8 @@
 import 'package:band_app/ui/chiper_webview/widgets/chiper_webview_screen.dart';
+import 'package:band_app/ui/lyrics/widgets/lyrics_screen.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_state.dart';
+import 'package:band_app/ui/repertoire_day/widgets/select_repertoire_type_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,7 +31,13 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
         builder: (context, state) {
           if (state is RepertoireDayError) {
             return Center(child: Text(state.message));
-          } else if (state is RepertoireDayLoaded) {
+          } else if (state is RepertoireDaySelectTypeState) {
+            return SelectRepertoireTypeWidget(
+              onSelectType: (index) {
+                cubit.selectRepertoireType(index);
+              },
+            );
+          } else if (state is RepertoireDayLyricsState) {
             return SafeArea(
               top: false,
               child: Column(
@@ -37,7 +45,45 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
                   Expanded(
                     child: IndexedStack(
                       index: state.index,
-                      children: state.chipers
+                      children: state.lyrics
+                          .map((lyrics) => LyricsScreen(lyrics: lyrics))
+                          .toList(),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: state.index > 0
+                            ? () {
+                                cubit.previousPage();
+                              }
+                            : null,
+                      ),
+                      Text('${state.index + 1} / ${state.lyrics.length}'),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward),
+                        onPressed: state.index < state.lyrics.length - 1
+                            ? () {
+                                cubit.nextPage();
+                              }
+                            : null,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          } else if (state is RepertoireDayCipherState) {
+            return SafeArea(
+              top: false,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: IndexedStack(
+                      index: state.index,
+                      children: state.cipher
                           .map((url) => ChiperWebviewScreen(url: url))
                           .toList(),
                     ),
@@ -53,10 +99,10 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
                               }
                             : null,
                       ),
-                      Text('${state.index + 1} / ${state.chipers.length}'),
+                      Text('${state.index + 1} / ${state.cipher.length}'),
                       IconButton(
                         icon: const Icon(Icons.arrow_forward),
-                        onPressed: state.index < state.chipers.length - 1
+                        onPressed: state.index < state.cipher.length - 1
                             ? () {
                                 cubit.nextPage();
                               }
@@ -67,9 +113,9 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
                 ],
               ),
             );
-          } else {
-            return const Center(child: CircularProgressIndicator());
           }
+
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
