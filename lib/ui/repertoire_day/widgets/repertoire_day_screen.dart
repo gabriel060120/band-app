@@ -1,5 +1,5 @@
 import 'package:band_app/ui/chiper_webview/widgets/chiper_webview_screen.dart';
-import 'package:band_app/ui/lyrics/widgets/lyrics_screen.dart';
+import 'package:band_app/ui/repertoire_day/widgets/lyrics_widget.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_state.dart';
 import 'package:band_app/ui/repertoire_day/widgets/select_repertoire_type_widget.dart';
@@ -42,11 +42,17 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
               top: false,
               child: Column(
                 children: [
+                  AppBar(title: Text(state.lyrics[state.index].title)),
                   Expanded(
                     child: IndexedStack(
                       index: state.index,
                       children: state.lyrics
-                          .map((lyrics) => LyricsScreen(lyrics: lyrics))
+                          .map(
+                            (lyrics) => LyricsWidget(
+                              lyrics: lyrics,
+                              fontSize: state.fontSize,
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
@@ -78,39 +84,46 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
           } else if (state is RepertoireDayCipherState) {
             return SafeArea(
               top: false,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: IndexedStack(
-                      index: state.index,
-                      children: state.cipher
-                          .map((url) => ChiperWebviewScreen(url: url))
-                          .toList(),
+              child: Scaffold(
+                appBar: AppBar(
+                  actions: [
+                    IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+                  ],
+                ),
+                body: Column(
+                  children: [
+                    Expanded(
+                      child: IndexedStack(
+                        index: state.index,
+                        children: state.cipher
+                            .map((url) => ChiperWebviewScreen(url: url))
+                            .toList(),
+                      ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: state.index > 0
-                            ? () {
-                                cubit.previousPage();
-                              }
-                            : null,
-                      ),
-                      Text('${state.index + 1} / ${state.cipher.length}'),
-                      IconButton(
-                        icon: const Icon(Icons.arrow_forward),
-                        onPressed: state.index < state.cipher.length - 1
-                            ? () {
-                                cubit.nextPage();
-                              }
-                            : null,
-                      ),
-                    ],
-                  ),
-                ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: state.index > 0
+                              ? () {
+                                  cubit.previousPage();
+                                }
+                              : null,
+                        ),
+                        Text('${state.index + 1} / ${state.cipher.length}'),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward),
+                          onPressed: state.index < state.cipher.length - 1
+                              ? () {
+                                  cubit.nextPage();
+                                }
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           }

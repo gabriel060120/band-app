@@ -19,10 +19,19 @@ class RepertoireDaySelectTypeState extends RepertoireDayState {
 class RepertoireDayLyricsState extends RepertoireDayState {
   final List<Lyrics> lyrics;
   final int index;
-  RepertoireDayLyricsState(this.lyrics, this.index);
+  final int fontSize;
+  RepertoireDayLyricsState(this.lyrics, this.index, {this.fontSize = 20});
 
-  RepertoireDayLyricsState copyWith({List<Lyrics>? lyrics, int? index}) {
-    return RepertoireDayLyricsState(lyrics ?? this.lyrics, index ?? this.index);
+  RepertoireDayLyricsState copyWith({
+    List<Lyrics>? lyrics,
+    int? index,
+    int? fontSize,
+  }) {
+    return RepertoireDayLyricsState(
+      lyrics ?? this.lyrics,
+      index ?? this.index,
+      fontSize: fontSize ?? this.fontSize,
+    );
   }
 }
 

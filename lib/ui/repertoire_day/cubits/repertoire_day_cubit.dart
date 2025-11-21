@@ -65,4 +65,11 @@ class RepertoireDayCubit extends Cubit<RepertoireDayState> {
       }
     }
   }
+
+  void updateFontSize(int newSize) {
+    if (state is RepertoireDayLyricsState) {
+      final currentState = state as RepertoireDayLyricsState;
+      emit(currentState.copyWith(fontSize: newSize));
+    }
+  }
 }
