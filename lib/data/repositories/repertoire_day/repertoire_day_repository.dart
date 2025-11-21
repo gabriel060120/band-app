@@ -7,7 +7,7 @@ class RepertoireDayRepository {
 
   RepertoireDayRepository(this.supabase);
 
-  Future<Result<RepertoireDay>> fetchRepertoireDays() async {
+  Future<Result<List<RepertoireDay>>> fetchRepertoireDays() async {
     try {
       final nowIso = DateTime.now().toUtc().toIso8601String();
       final response = await supabase.client
@@ -27,11 +27,13 @@ class RepertoireDayRepository {
     )
   ''')
           .filter('date', 'gte', nowIso)
-          .order('date', ascending: true)
-          .limit(1);
+          .order('date', ascending: true);
 
-      final day = response.first;
-      return Result.ok(RepertoireDay.fromMap(day));
+      return Result.ok(
+        response
+            .map<RepertoireDay>((day) => RepertoireDay.fromMap(day))
+            .toList(),
+      );
     } catch (e) {
       return Result.error(Exception('Erro na busca do DB'));
     }

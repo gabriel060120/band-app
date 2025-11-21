@@ -107,6 +107,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   Widget _buildLogo(BuildContext context) {
     // Ajuste o tamanho conforme necessário
-    return Icon(Icons.piano, color: Colors.white, size: 100);
+    return Icon(Icons.piano, size: 100);
   }
 }

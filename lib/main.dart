@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Band APP',
-      theme: ThemeData.dark(),
+      theme: ThemeData(),
+      themeMode: ThemeMode.system,
+      darkTheme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       routerConfig: router,
     );

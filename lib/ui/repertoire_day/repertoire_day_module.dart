@@ -25,6 +25,13 @@ class RepertoireDayModule implements FeatureModule {
   @override
   List<RouteBase> routes() => [
     GoRoute(
+      path: '/timeline-repertoire',
+      builder: (context, state) => BlocProvider<RepertoireDayCubit>.value(
+        value: GetIt.I<RepertoireDayCubit>(),
+        child: const RepertoireDayScreen(),
+      ),
+    ),
+    GoRoute(
       path: '/repertoire-day',
       builder: (context, state) => BlocProvider<RepertoireDayCubit>.value(
         value: GetIt.I<RepertoireDayCubit>(),

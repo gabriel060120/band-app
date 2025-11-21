@@ -5,7 +5,7 @@ import 'package:bloc/bloc.dart';
 
 class RepertoireDayCubit extends Cubit<RepertoireDayState> {
   RepertoireDayCubit(this._repertoireDayRepository)
-      : super(RepertoireDayInitial());
+    : super(RepertoireDayInitial());
   final RepertoireDayRepository _repertoireDayRepository;
 
   Future<void> fetchRepertoireDays() async {
@@ -36,32 +36,4 @@ class RepertoireDayCubit extends Cubit<RepertoireDayState> {
       emit(RepertoireDaySelectCipherState(id));
     }
   }
-
-  // void previousPage() {
-  //   if (state is RepertoireDaySelectCipherState) {
-  //     final currentState = state as RepertoireDaySelectCipherState;
-  //     if (currentState.index > 0) {
-  //       emit(currentState.copyWith(index: currentState.index - 1));
-  //     }
-  //   } else {
-  //     final currentState = state as RepertoireDaySelectLyricsState;
-  //     if (currentState.index > 0) {
-  //       emit(currentState.copyWith(index: currentState.index - 1));
-  //     }
-  //   }
-  // }
-
-  // void nextPage() {
-  //   if (state is RepertoireDaySelectCipherState) {
-  //     final currentState = state as RepertoireDaySelectCipherState;
-  //     if (currentState.index < currentState.cipher.length - 1) {
-  //       emit(currentState.copyWith(index: currentState.index + 1));
-  //     }
-  //   } else {
-  //     final currentState = state as RepertoireDaySelectLyricsState;
-  //     if (currentState.index < currentState.lyrics.length - 1) {
-  //       emit(currentState.copyWith(index: currentState.index + 1));
-  //     }
-  //   }
-  // }
 }
