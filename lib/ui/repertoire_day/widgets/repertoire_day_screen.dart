@@ -4,6 +4,7 @@ import 'package:band_app/ui/repertoire_day/widgets/select_repertoire_type_widget
 import 'package:band_app/ui/repertoire_day/widgets/timeline_repertoire_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class RepertoireDayScreen extends StatefulWidget {
   const RepertoireDayScreen({super.key});
@@ -39,93 +40,12 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
             }
             return TimelineRepertoireWidget(
               repertoireDays: state.repertoireDays,
-              onTapRepertoire: (day) => cubit.selectRepertoireDay(day.id),
-            );
-          } else if (state is RepertoireDaySelectTypeState) {
-            return SelectRepertoireTypeWidget(
-              onSelectType: (index) {
-                cubit.selectRepertoireType(index, state.repertoireDay.id);
-              },
+              onTapRepertoire: (day) => context.pushNamed(
+                '/select-repertoire-type',
+                queryParameters: {'id': day.id},
+              ),
             );
           }
-          // else if (state is RepertoireDaySelectLyricsState) {
-          //   return SafeArea(
-          //     top: false,
-          //     child: Column(
-          //       children: [
-          //         Expanded(
-          //           child: IndexedStack(
-          //             index: state.index,
-          //             children: state.lyrics
-          //                 .map((lyrics) => LyricsScreen(lyrics: lyrics))
-          //                 .toList(),
-          //           ),
-          //         ),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             IconButton(
-          //               icon: const Icon(Icons.arrow_back),
-          //               onPressed: state.index > 0
-          //                   ? () {
-          //                       cubit.previousPage();
-          //                     }
-          //                   : null,
-          //             ),
-          //             Text('${state.index + 1} / ${state.lyrics.length}'),
-          //             IconButton(
-          //               icon: const Icon(Icons.arrow_forward),
-          //               onPressed: state.index < state.lyrics.length - 1
-          //                   ? () {
-          //                       cubit.nextPage();
-          //                     }
-          //                   : null,
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   );
-          // } else if (state is RepertoireDaySelectCipherState) {
-          //   return SafeArea(
-          //     top: false,
-          //     child: Column(
-          //       children: [
-          //         Expanded(
-          //           child: IndexedStack(
-          //             index: state.index,
-          //             children: state.cipher
-          //                 .map((url) => ChiperWebviewScreen(url: url))
-          //                 .toList(),
-          //           ),
-          //         ),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             IconButton(
-          //               icon: const Icon(Icons.arrow_back),
-          //               onPressed: state.index > 0
-          //                   ? () {
-          //                       cubit.previousPage();
-          //                     }
-          //                   : null,
-          //             ),
-          //             Text('${state.index + 1} / ${state.cipher.length}'),
-          //             IconButton(
-          //               icon: const Icon(Icons.arrow_forward),
-          //               onPressed: state.index < state.cipher.length - 1
-          //                   ? () {
-          //                       cubit.nextPage();
-          //                     }
-          //                   : null,
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   );
-          // }
-
           return const Center(child: CircularProgressIndicator());
         },
       ),

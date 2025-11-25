@@ -13,24 +13,32 @@ class _LyricsScreenState extends State<LyricsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 32),
-              Text(
-                widget.lyrics.title,
-                style: TextStyle(
-                  fontSize: 32,
-                  color: Theme.of(context).colorScheme.primary,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.lyrics.title,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 32),
+                Text(
+                  widget.lyrics.title,
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-              ),
-              SizedBox(height: 16),
-              Text(widget.lyrics.content),
-              SizedBox(height: 16),
-            ],
+                SizedBox(height: 16),
+                Text(widget.lyrics.content),
+                SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

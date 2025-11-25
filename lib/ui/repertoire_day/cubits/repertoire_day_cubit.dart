@@ -5,7 +5,7 @@ import 'package:bloc/bloc.dart';
 
 class RepertoireDayCubit extends Cubit<RepertoireDayState> {
   RepertoireDayCubit(this._repertoireDayRepository)
-      : super(RepertoireDayInitial());
+    : super(RepertoireDayInitial());
   final RepertoireDayRepository _repertoireDayRepository;
 
   Future<void> fetchRepertoireDays() async {
@@ -19,22 +19,6 @@ class RepertoireDayCubit extends Cubit<RepertoireDayState> {
         emit(RepertoireDayError('Talvez você não esteja conectado à internet'));
       },
     );
-  }
-
-  void selectRepertoireDay(String id) {
-    if (state is RepertoireDayListState) {
-      final days = (state as RepertoireDayListState).repertoireDays;
-      final selectedDay = days.firstWhere((day) => day.id == id);
-      emit(RepertoireDaySelectTypeState(selectedDay));
-    }
-  }
-
-  void selectRepertoireType(int index, String id) {
-    if (index == 0) {
-      emit(RepertoireDaySelectLyricsState(id));
-    } else {
-      emit(RepertoireDaySelectCipherState(id));
-    }
   }
 
   // void previousPage() {
