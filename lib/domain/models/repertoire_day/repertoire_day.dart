@@ -15,7 +15,6 @@ class RepertoireDay {
     String? id,
     DateTime? date,
     String? title,
-    List<String>? ciphers,
     String? observations,
   }) {
     return RepertoireDay(
@@ -28,7 +27,7 @@ class RepertoireDay {
 
   factory RepertoireDay.fromMap(Map<String, dynamic> map) {
     return RepertoireDay(
-      id: map['id'] as String,
+      id: map['id'],
       date: DateTime.parse(map['date']),
       title: map['title'] ?? '',
       observations: map['observations'] ?? '',

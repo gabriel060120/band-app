@@ -1,17 +1,32 @@
+import 'package:band_app/domain/models/repertoire_day/event_data.dart';
+
 abstract class EventSelectedState {
-  EventSelectedState();
+  final String repertoireId;
+  EventSelectedState(this.repertoireId);
+}
+
+class EventSelectedLoadingState extends EventSelectedState {
+  EventSelectedLoadingState(super.repertoireId);
 }
 
 class EventSelectedInitialState extends EventSelectedState {
-  final String repertoireId;
-  EventSelectedInitialState(this.repertoireId);
+  EventSelectedInitialState(super.repertoireId);
+}
+
+class EventSelectedLoadedState extends EventSelectedState {
+  final EventData eventData;
+  EventSelectedLoadedState(super.repertoireId, this.eventData);
+}
+
+class EventSelectedErrorState extends EventSelectedState {
+  final String errorMessage;
+  EventSelectedErrorState(super.repertoireId, this.errorMessage);
 }
 
 class EventSelectLyricsState extends EventSelectedState {
-  final String repertoireId;
-  EventSelectLyricsState(this.repertoireId);
+  EventSelectLyricsState(super.repertoireId);
 }
 
 class EventSelectCipherState extends EventSelectedState {
-  EventSelectCipherState();
+  EventSelectCipherState(super.repertoireId);
 }

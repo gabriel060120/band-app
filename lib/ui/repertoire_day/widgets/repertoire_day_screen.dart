@@ -39,10 +39,8 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
             }
             return TimelineRepertoireWidget(
               repertoireDays: state.repertoireDays,
-              onTapRepertoire: (day) => context.pushNamed(
-                'select-repertoire-type',
-                queryParameters: {'id': day.id},
-              ),
+              onTapRepertoire: (day) =>
+                  context.pushNamed('select-repertoire-type', extra: day.id),
             );
           }
           return const Center(child: CircularProgressIndicator());

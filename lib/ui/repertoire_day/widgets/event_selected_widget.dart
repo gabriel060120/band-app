@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
-class EventSelectedScreen extends StatefulWidget {
-  const EventSelectedScreen({super.key});
+class EventSelectedWidget extends StatefulWidget {
+  const EventSelectedWidget({super.key});
 
   @override
-  State<EventSelectedScreen> createState() => _EventSelectedScreenState();
+  State<EventSelectedWidget> createState() => _EventSelectedWidgetState();
 }
 
-class _EventSelectedScreenState extends State<EventSelectedScreen> {
+class _EventSelectedWidgetState extends State<EventSelectedWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Mock data for visual appearance (will be replaced by real data later)
     final setlist = const [
       {'title': 'Tempo Perdido', 'artist': 'Legião Urbana', 'duration': '5:02'},
       {'title': 'Pais e Filhos', 'artist': 'Legião Urbana', 'duration': '4:45'},
