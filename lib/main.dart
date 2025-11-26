@@ -5,11 +5,13 @@ import 'package:band_app/ui/splash/splash_module.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'routing/routing.dart';
 
 Future<void> main() async {
   registerCore();
+  await initializeDateFormatting('pt_BR', null);
   await GetIt.I<ApiClient>().init();
   final modules = <FeatureModule>[SplashModule(), RepertoireDayModule()];
   for (final module in modules) {

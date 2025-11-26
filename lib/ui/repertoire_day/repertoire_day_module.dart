@@ -5,7 +5,7 @@ import 'package:band_app/routing/routing.dart';
 import 'package:band_app/ui/repertoire_day/cubits/event_selected_cubit.dart';
 import 'package:band_app/ui/repertoire_day/cubits/event_selected_state.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
-import 'package:band_app/ui/repertoire_day/widgets/event_selected_widget.dart';
+import 'package:band_app/ui/repertoire_day/widgets/event_selected_screen.dart';
 import 'package:band_app/ui/repertoire_day/widgets/repertoire_day_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -48,7 +48,7 @@ class RepertoireDayModule implements FeatureModule {
           EventSelectedInitialState(state.extra as String),
           GetIt.I<EventSelectedRepository>(),
         ),
-        child: const EventSelectedWidget(),
+        child: const EventSelectedScreen(),
       ),
     ),
     GoRoute(
