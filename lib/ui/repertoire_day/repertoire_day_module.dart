@@ -2,7 +2,6 @@ import 'package:band_app/data/repositories/repertoire_day/repertoire_day_reposit
 import 'package:band_app/data/services/api/api_client.dart';
 import 'package:band_app/routing/routing.dart';
 import 'package:band_app/ui/repertoire_day/cubits/event_selected_cubit.dart';
-import 'package:band_app/ui/repertoire_day/cubits/event_selected_state.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
 import 'package:band_app/ui/repertoire_day/widgets/event_selected_screen.dart';
 import 'package:band_app/ui/repertoire_day/widgets/repertoire_day_screen.dart';
@@ -30,6 +29,7 @@ class RepertoireDayModule implements FeatureModule {
   List<RouteBase> routes() => [
     GoRoute(
       path: '/timeline-repertoire',
+      name: 'repertoire-timeline',
       builder: (context, state) => BlocProvider<RepertoireDayCubit>.value(
         value: GetIt.I<RepertoireDayCubit>(),
         child: const RepertoireDayScreen(),
@@ -37,6 +37,7 @@ class RepertoireDayModule implements FeatureModule {
     ),
     GoRoute(
       path: '/select-repertoire-type',
+      name: 'select-repertoire-type',
       builder: (context, state) => BlocProvider<EventSelectedCubit>.value(
         value: GetIt.I<EventSelectedCubit>(),
         child: const EventSelectedScreen(),

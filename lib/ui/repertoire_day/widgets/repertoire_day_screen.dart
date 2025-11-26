@@ -1,6 +1,5 @@
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_state.dart';
-import 'package:band_app/ui/repertoire_day/widgets/select_repertoire_type_widget.dart';
 import 'package:band_app/ui/repertoire_day/widgets/timeline_repertoire_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +40,7 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
             return TimelineRepertoireWidget(
               repertoireDays: state.repertoireDays,
               onTapRepertoire: (day) => context.pushNamed(
-                '/select-repertoire-type',
+                'select-repertoire-type',
                 queryParameters: {'id': day.id},
               ),
             );

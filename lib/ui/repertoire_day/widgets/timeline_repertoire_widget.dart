@@ -19,16 +19,12 @@ class TimelineRepertoireWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
       itemBuilder: (context, index) {
         final repertoireDay = repertoireDays[index];
-        final isLast = index == repertoireDays.length - 1;
-
         return IntrinsicHeight(
           child: Row(
             children: [
-              // Linha vertical da timeline
               SizedBox(
                 width: 24,
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       decoration: BoxDecoration(shape: BoxShape.circle),
@@ -39,7 +35,6 @@ class TimelineRepertoireWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              // Conteúdo do card
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
@@ -67,80 +62,77 @@ class _TimelineCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final date = DateFormat('dd/MM/yyyy').format(repertoireDay.date);
-
-    return Container(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today, size: 16),
-                  const SizedBox(width: 8),
-                  Text(date, style: theme.textTheme.bodyMedium),
-                ],
-              ),
-              if (repertoireDay.title.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  repertoireDay.title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.calendar_today, size: 16),
+                const SizedBox(width: 8),
+                Text(date, style: theme.textTheme.bodyMedium),
               ],
+            ),
+            if (repertoireDay.title.isNotEmpty) ...[
               const SizedBox(height: 8),
-              // Row(
-              //   children: [
-              //     _CountBadge(
-              //       icon: Icons.music_note,
-              //       count: repertoireDay.lyrics.length,
-              //       label: 'Letras',
-              //     ),
-              //     const SizedBox(width: 16),
-              //     _CountBadge(
-              //       icon: Icons.queue_music,
-              //       count: repertoireDay.ciphers.length,
-              //       label: 'Cifras',
-              //     ),
-              //   ],
-              // ),
+              Text(
+                repertoireDay.title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
-          ),
+            const SizedBox(height: 8),
+            // Row(
+            //   children: [
+            //     _CountBadge(
+            //       icon: Icons.music_note,
+            //       count: repertoireDay.lyrics.length,
+            //       label: 'Letras',
+            //     ),
+            //     const SizedBox(width: 16),
+            //     _CountBadge(
+            //       icon: Icons.queue_music,
+            //       count: repertoireDay.ciphers.length,
+            //       label: 'Cifras',
+            //     ),
+            //   ],
+            // ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({
-    required this.icon,
-    required this.count,
-    required this.label,
-  });
+// class _CountBadge extends StatelessWidget {
+//   const _CountBadge({
+//     required this.icon,
+//     required this.count,
+//     required this.label,
+//   });
 
-  final IconData icon;
-  final int count;
-  final String label;
+//   final IconData icon;
+//   final int count;
+//   final String label;
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        Icon(icon, size: 16),
-        const SizedBox(width: 4),
-        Text(
-          '$count $label',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
-          ),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     return Row(
+//       children: [
+//         Icon(icon, size: 16),
+//         const SizedBox(width: 4),
+//         Text(
+//           '$count $label',
+//           style: theme.textTheme.bodySmall?.copyWith(
+//             color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

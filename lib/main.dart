@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Band APP',
       theme: ThemeData(),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       routerConfig: router,
