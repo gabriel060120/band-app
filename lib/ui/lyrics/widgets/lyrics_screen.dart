@@ -1,8 +1,8 @@
 import 'package:band_app/ui/lyrics/cubits/lyrics_cubit.dart';
 import 'package:band_app/ui/lyrics/cubits/lyrics_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'lyrics_widget.dart';
 
@@ -39,43 +39,6 @@ class _LyricsScreenState extends State<LyricsScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  String _buildShareTextFromLyrics(currentLyrics, {String? singer}) {
-    // Builds a human-readable string with title, artist and optional singer
-    final title = (currentLyrics.title ?? '').toString().trim();
-    final artist = (currentLyrics.artist ?? '').toString().trim();
-    final singerText = (singer ?? '').toString().trim();
-
-    final parts = <String>[];
-    if (title.isNotEmpty) parts.add('Música: $title');
-    if (artist.isNotEmpty) parts.add('Artista: $artist');
-    if (singerText.isNotEmpty) parts.add('Cantor: $singerText');
-
-    return parts.join('\n');
-  }
-
-  Future<void> _shareLyricsInfo(currentLyrics, {String? singer}) async {
-    final text = _buildShareTextFromLyrics(currentLyrics, singer: singer);
-    if (text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Nada a compartilhar')));
-      return;
-    }
-
-    try {
-      await Clipboard.setData(ClipboardData(text: text));
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Texto copiado para a área de transferência'),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Erro ao copiar texto')));
-    }
   }
 
   @override
@@ -118,7 +81,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
               centerTitle: true,
               actions: [
                 IconButton(
-                  onPressed: () => _shareLyricsInfo(currentLyrics),
+                  onPressed: () {
+                    SharePlus.instance.share(
+                      ShareParams(
+                        text:
+                            '${currentLyrics.title} - ${currentLyrics.artist}\n\n${currentLyrics.content}',
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.share_rounded),
                 ),
                 IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),

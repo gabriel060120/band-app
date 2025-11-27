@@ -7,13 +7,16 @@ class LyricsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 16),
-        Text(lyrics.content, style: TextStyle(fontSize: 16)),
-        SizedBox(height: 16),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 16),
+          Text(lyrics.content, style: TextStyle(fontSize: 20)),
+          SizedBox(height: 16),
+        ],
+      ),
     );
   }
 }
