@@ -23,10 +23,11 @@ class EventSelectedErrorState extends EventSelectedState {
   EventSelectedErrorState(super.repertoireId, this.errorMessage);
 }
 
-class EventSelectLyricsState extends EventSelectedState {
-  EventSelectLyricsState(super.repertoireId);
-}
+// class EventSelectLyricsState extends EventSelectedState {
+//   final List<Lyrics> lyrics;
+//   EventSelectLyricsState(super.repertoireId, this.lyrics);
+// }
 
-class EventSelectCipherState extends EventSelectedState {
-  EventSelectCipherState(super.repertoireId);
-}
+// class EventSelectCipherState extends EventSelectedState {
+//   EventSelectCipherState(super.repertoireId);
+// }

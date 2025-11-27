@@ -13,10 +13,10 @@ class Lyrics {
     );
   }
 
-  factory Lyrics.fromMap(Map<String, dynamic> map) {
+  factory Lyrics.fromMap(Map<String, dynamic> map, {String artist = ''}) {
     return Lyrics(
       title: map['name'],
-      artist: map['artist'] ?? '',
+      artist: map['artist'] ?? artist,
       content: map['body'],
     );
   }

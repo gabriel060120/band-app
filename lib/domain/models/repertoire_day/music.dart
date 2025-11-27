@@ -41,8 +41,9 @@ class Music {
       name: map['music']?['name'] ?? '',
       artist: map['music']?['artist'] ?? '',
       lyrics: List<Lyrics>.from(
-        (map['lyrics'] ?? []).map<Lyrics>(
-          (x) => Lyrics.fromMap(x as Map<String, dynamic>),
+        (map['music']['lyrics'] ?? []).map<Lyrics>(
+          (lyricsMap) =>
+              Lyrics.fromMap(lyricsMap, artist: map['music']?['artist'] ?? ''),
         ),
       ),
       ciphers: [],

@@ -21,7 +21,9 @@ class EventSelectedRepository {
         music (
           id,
           name,
-          artist
+          artist,
+          lyrics(*),
+          cipher(*)
         )
       )
     ''')
