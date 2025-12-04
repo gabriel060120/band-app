@@ -137,7 +137,7 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          'Lembrar de agradecer os patrocinadores após a 3ª música.\nTroca de guitarra na música 5.',
+                                          state.eventData.eventDay.observations,
                                           style: theme.textTheme.bodyMedium
                                               ?.copyWith(
                                                 color: Colors.white.withValues(
