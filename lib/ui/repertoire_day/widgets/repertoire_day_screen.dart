@@ -46,6 +46,10 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
           return const Center(child: CircularProgressIndicator());
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.pushNamed('create-event'),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

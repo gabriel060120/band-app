@@ -1,19 +1,16 @@
-import 'package:band_app/data/repositories/repertoire_day/event_selected_repository.dart';
-import 'package:band_app/data/repositories/repertoire_day/repertoire_day_repository.dart';
 import 'package:band_app/data/services/api/api_client.dart';
 import 'package:band_app/routing/routing.dart';
-import 'package:band_app/ui/lyrics/cubits/lyrics_cubit.dart';
-import 'package:band_app/ui/lyrics/widgets/lyrics_screen.dart';
-import 'package:band_app/ui/repertoire_day/cubits/event_selected_cubit.dart';
-import 'package:band_app/ui/repertoire_day/cubits/event_selected_state.dart';
-import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_cubit.dart';
-import 'package:band_app/ui/repertoire_day/widgets/event_selected_screen.dart';
-import 'package:band_app/ui/repertoire_day/widgets/repertoire_day_screen.dart';
+import 'package:band_app/ui/repertoire_day/widgets/widgets.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/repositories/repositories.dart';
 import '../../domain/models/lyrics/lyrics.dart';
+import '../lyrics/cubits/lyrics_cubit.dart';
+import '../lyrics/widgets/lyrics_screen.dart';
+import 'cubits/cubits.dart';
 
 class RepertoireDayModule implements FeatureModule {
   @override
@@ -28,7 +25,12 @@ class RepertoireDayModule implements FeatureModule {
       ..registerFactory<EventSelectedRepository>(
         () => EventSelectedRepository(di<ApiClient>()),
       )
-      // ..registerFactory<EventSelectedCubit>(EventSelectedCubit.new)
+      ..registerFactory<CreateEventRepository>(
+        () => CreateEventRepository(di<ApiClient>()),
+      )
+      ..registerFactory<CreateEventCubit>(
+        () => CreateEventCubit(di<CreateEventRepository>()),
+      )
       ..registerFactory<RepertoireDayCubit>(
         () => RepertoireDayCubit(di<RepertoireDayRepository>()),
       );
@@ -42,6 +44,14 @@ class RepertoireDayModule implements FeatureModule {
       builder: (context, state) => BlocProvider<RepertoireDayCubit>.value(
         value: GetIt.I<RepertoireDayCubit>(),
         child: const RepertoireDayScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/create-event',
+      name: 'create-event',
+      builder: (context, state) => BlocProvider<CreateEventCubit>.value(
+        value: GetIt.I<CreateEventCubit>(),
+        child: const CreateEventScreen(),
       ),
     ),
     GoRoute(
