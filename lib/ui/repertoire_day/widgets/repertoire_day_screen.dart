@@ -47,7 +47,13 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.pushNamed('create-event'),
+        onPressed: () async {
+          final needUpdate =
+              await context.pushNamed<bool>('create-event') ?? false;
+          if (needUpdate) {
+            cubit.fetchRepertoireDays();
+          }
+        },
         child: const Icon(Icons.add),
       ),
     );
