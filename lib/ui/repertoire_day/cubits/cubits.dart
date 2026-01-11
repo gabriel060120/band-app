@@ -5,3 +5,5 @@ export 'event_selected_state.dart';
 export 'repertoire_day_cubit.dart';
 export 'repertoire_day_state.dart';
 export 'timeline_repertoire_cubit.dart';
+export 'update_music_on_event_cubit.dart';
+export 'update_music_on_event_state.dart';

@@ -158,12 +158,23 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Repertório',
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Repertório',
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    color: Colors.grey.shade300,
+                                    onPressed: () {},
+                                  ),
+                                ],
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
