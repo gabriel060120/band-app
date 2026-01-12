@@ -172,7 +172,20 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                                   IconButton(
                                     icon: Icon(Icons.add),
                                     color: Colors.grey.shade300,
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      final result = await context
+                                          .pushNamed<bool>(
+                                            'update-music-on-event',
+                                            extra: state.eventData.musics,
+                                            pathParameters: {
+                                              'eventId':
+                                                  state.eventData.eventDay.id,
+                                            },
+                                          );
+                                      if (result == true) {
+                                        cubit.fetchEventData();
+                                      }
+                                    },
                                   ),
                                 ],
                               ),

@@ -1,6 +1,5 @@
 import 'package:band_app/data/services/api/api_client.dart';
 import 'package:band_app/domain/models/repertoire_day/music.dart';
-import 'package:band_app/domain/models/lyrics/lyrics.dart';
 
 import '../../../utils/result.dart';
 
@@ -41,7 +40,11 @@ class UpdateMusicOnEventRepository {
   }) async {
     try {
       final rows = musics.asMap().entries.map((e) {
-        return {'repertoire_day': eventId, 'music': e.value.id, 'order': e.key};
+        return {
+          'repertoire_day_id': eventId,
+          'music_id': e.value.id,
+          'order': e.key,
+        };
       }).toList();
 
       if (rows.isNotEmpty) {
@@ -61,8 +64,8 @@ class UpdateMusicOnEventRepository {
     try {
       for (final m in musics) {
         await supabase.client.from('repertoire_music').delete().match({
-          'repertoire_day': eventId,
-          'music': m.id,
+          'repertoire_day_id': eventId,
+          'music_id': m.id,
         });
       }
 

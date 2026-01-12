@@ -1,3 +1,4 @@
+import 'package:band_app/data/repositories/repertoire_day/update_music_on_event_repository.dart';
 import 'package:band_app/data/services/api/api_client.dart';
 import 'package:band_app/routing/routing.dart';
 import 'package:band_app/ui/repertoire_day/widgets/widgets.dart';
@@ -8,6 +9,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/repositories/repositories.dart';
 import '../../domain/models/lyrics/lyrics.dart';
+import '../../domain/models/repertoire_day/music.dart';
 import '../lyrics/cubits/lyrics_cubit.dart';
 import '../lyrics/widgets/lyrics_screen.dart';
 import 'cubits/cubits.dart';
@@ -30,6 +32,12 @@ class RepertoireDayModule implements FeatureModule {
       )
       ..registerFactory<CreateEventCubit>(
         () => CreateEventCubit(di<CreateEventRepository>()),
+      )
+      ..registerFactory<UpdateMusicOnEventRepository>(
+        () => UpdateMusicOnEventRepository(di<ApiClient>()),
+      )
+      ..registerFactory<UpdateMusicOnEventCubit>(
+        () => UpdateMusicOnEventCubit(di<UpdateMusicOnEventRepository>()),
       )
       ..registerFactory<RepertoireDayCubit>(
         () => RepertoireDayCubit(di<RepertoireDayRepository>()),
@@ -63,6 +71,17 @@ class RepertoireDayModule implements FeatureModule {
           GetIt.I<EventSelectedRepository>(),
         ),
         child: const EventSelectedScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/update-music-on-event/:eventId',
+      name: 'update-music-on-event',
+      builder: (context, state) => BlocProvider<UpdateMusicOnEventCubit>.value(
+        value: GetIt.I<UpdateMusicOnEventCubit>(),
+        child: UpdateMusicOnEventScreen(
+          initialSelectedMusics: state.extra as List<Music>,
+          eventId: state.pathParameters['eventId'] ?? '',
+        ),
       ),
     ),
     GoRoute(
