@@ -1,6 +1,5 @@
 import 'package:band_app/data/services/api/api_client.dart';
 import 'package:band_app/domain/models/repertoire_day/music.dart';
-import 'package:band_app/domain/models/lyrics/lyrics.dart';
 
 import '../../../utils/result.dart';
 
