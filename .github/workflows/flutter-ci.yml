@@ -14,12 +14,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # - name: Set up Flutter
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: stable
+      #     flutter-version-file: pubspec.yaml
+      #     cache: true
+      - name: Cache pub + build artifacts
+        uses: actions/cache@v5
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
-          cache: true
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-dart-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-dart-
+      
+      - name: Install Flutter (SDK bundle)
+        run: |
+          set -e
+          curl -fsSL -o flutter.tar.xz \
+            "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.7-stable.tar.xz"
+          tar -xf flutter.tar.xz
+          echo "$PWD/flutter/bin" >> "$GITHUB_PATH"
+          flutter --version
 
       - name: Get dependencies
         run: flutter pub get
