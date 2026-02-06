@@ -47,7 +47,7 @@ class Music {
         ),
       ),
       ciphers: [],
-      order: map['order'],
+      order: map['order'] ?? 0,
       // List<Cipher>.from(
       // (map['ciphers'] ?? []).map<Cipher>(
       // (x) => Cipher.fromMap(x as Map<String, dynamic>),
