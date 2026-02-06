@@ -32,11 +32,21 @@ jobs:
       
       - name: Install Flutter (SDK bundle)
         run: |
-          set -e
-          curl -fsSL -o flutter.tar.xz \
-            "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.7-stable.tar.xz"
-          tar -xf flutter.tar.xz
-          echo "$PWD/flutter/bin" >> "$GITHUB_PATH"
+          set -euo pipefail
+      
+          FLUTTER_VERSION="3.35.7"
+          SDK_TAR="$RUNNER_TEMP/flutter.tar.xz"
+          SDK_DIR="$RUNNER_TEMP/flutter"
+      
+          curl -fsSL -o "$SDK_TAR" \
+            "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
+      
+          tar -xJf "$SDK_TAR" -C "$RUNNER_TEMP"
+      
+          echo "$SDK_DIR/bin" >> "$GITHUB_PATH"
+          export PATH="$SDK_DIR/bin:$PATH"
+      
+          flutter --version
 
       - name: Get dependencies
         run: flutter pub get
