@@ -14,13 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Set up Flutter
-      #   uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: stable
-      #     flutter-version-file: pubspec.yaml
-      #     cache: true
-      - name: Cache pub + build artifacts
+      - name: Cache pub
         uses: actions/cache@v5
         with:
           path: |
@@ -50,9 +44,6 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
-
-      # - name: Format check
-        # run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze
         run: flutter analyze
