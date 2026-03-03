@@ -9,7 +9,10 @@ class RepertoireDayRepository {
 
   Future<Result<List<RepertoireDay>>> fetchRepertoireDays() async {
     try {
-      final nowIso = DateTime.now().toUtc().toIso8601String();
+      final nowIso = DateTime.now()
+          .subtract(Duration(days: 1))
+          .toUtc()
+          .toIso8601String();
       final response = await supabase.client
           .from('repertoire_day')
           .select('''

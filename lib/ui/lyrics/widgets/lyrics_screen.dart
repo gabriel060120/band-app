@@ -53,122 +53,131 @@ class _LyricsScreenState extends State<LyricsScreen> {
         builder: (context, state) {
           var currentLyrics = state.lyrics[state.index];
           return Scaffold(
-            appBar: AppBar(
-              // leading: IconButton(
-              //   icon: const Icon(Icons.chevron_left_outlined),
-              //   onPressed: () => Navigator.maybePop(context),
-              // ),
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    currentLyrics.title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    currentLyrics.artist,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.textTheme.bodySmall?.color?.withValues(
-                        alpha: 0.8,
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  snap: true,
+                  pinned: false,
+                  // leading: IconButton(
+                  //   icon: const Icon(Icons.chevron_left_outlined),
+                  //   onPressed: () => Navigator.maybePop(context),
+                  // ),
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        currentLyrics.title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    SharePlus.instance.share(
-                      ShareParams(
-                        text:
-                            '${currentLyrics.title} - ${currentLyrics.artist}\n\n${currentLyrics.content}',
+                      const SizedBox(height: 2),
+                      Text(
+                        currentLyrics.artist,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.textTheme.bodySmall?.color?.withValues(
+                            alpha: 0.8,
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  icon: const Icon(Icons.share_rounded),
+                    ],
+                  ),
+                  centerTitle: true,
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        SharePlus.instance.share(
+                          ShareParams(
+                            text:
+                                '${currentLyrics.title} - ${currentLyrics.artist}\n\n${currentLyrics.content}',
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.share_rounded),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.settings),
+                    ),
+                    const SizedBox(width: 6),
+                  ],
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-                const SizedBox(width: 6),
-              ],
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: IndexedStack(
-                      index: state.index,
-                      children: state.lyrics
-                          .map((l) => LyricsWidget(lyrics: l))
-                          .toList(),
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: Expanded(
+                    child: SingleChildScrollView(
+                      child: IndexedStack(
+                        index: state.index,
+                        children: state.lyrics
+                            .map((l) => LyricsWidget(lyrics: l))
+                            .toList(),
+                      ),
                     ),
                   ),
                 ),
 
                 // Bottom controls (tempo slider + central action)
-                Material(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 12,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: SliderTheme(
-                                data: SliderTheme.of(
-                                  context,
-                                ).copyWith(trackHeight: 4),
-                                child: Slider(
-                                  value: _speed,
-                                  min: 0.25,
-                                  max: 2.0,
-                                  divisions: 7,
-                                  onChanged: (v) => setState(() => _speed = v),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.play_arrow_rounded, size: 22),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              onPressed: state.index > 0
-                                  ? () {
-                                      cubit.previousLyrics();
-                                    }
-                                  : null,
-                            ),
-                            Text('${state.index + 1} / ${state.lyrics.length}'),
-                            IconButton(
-                              icon: const Icon(Icons.arrow_forward),
-                              onPressed: state.index < state.lyrics.length - 1
-                                  ? () {
-                                      cubit.nextLyrics();
-                                    }
-                                  : null,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Material(
+                //   color: theme.colorScheme.surfaceContainerHighest,
+                //   elevation: 8,
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //       horizontal: 18,
+                //       vertical: 12,
+                //     ),
+                //     child: Column(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: [
+                //         Row(
+                //           children: [
+                //             const SizedBox(width: 10),
+                //             Expanded(
+                //               child: SliderTheme(
+                //                 data: SliderTheme.of(
+                //                   context,
+                //                 ).copyWith(trackHeight: 4),
+                //                 child: Slider(
+                //                   value: _speed,
+                //                   min: 0.25,
+                //                   max: 2.0,
+                //                   divisions: 7,
+                //                   onChanged: (v) => setState(() => _speed = v),
+                //                 ),
+                //               ),
+                //             ),
+                //             IconButton(
+                //               onPressed: () {},
+                //               icon: Icon(Icons.play_arrow_rounded, size: 22),
+                //             ),
+                //           ],
+                //         ),
+                //         Row(
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             IconButton(
+                //               icon: const Icon(Icons.arrow_back),
+                //               onPressed: state.index > 0
+                //                   ? () {
+                //                       cubit.previousLyrics();
+                //                     }
+                //                   : null,
+                //             ),
+                //             Text('${state.index + 1} / ${state.lyrics.length}'),
+                //             IconButton(
+                //               icon: const Icon(Icons.arrow_forward),
+                //               onPressed: state.index < state.lyrics.length - 1
+                //                   ? () {
+                //                       cubit.nextLyrics();
+                //                     }
+                //                   : null,
+                //             ),
+                //           ],
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           );
