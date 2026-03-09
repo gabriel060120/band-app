@@ -32,7 +32,12 @@ class MyApp extends StatelessWidget {
       title: 'Band APP',
       theme: ThemeData(),
       themeMode: ThemeMode.dark,
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.lightBlue,
+          brightness: Brightness.dark,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       routerConfig: router,
     );
