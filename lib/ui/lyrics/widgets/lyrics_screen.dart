@@ -1,6 +1,7 @@
 import 'package:band_app/ui/lyrics/cubits/lyrics_cubit.dart';
 import 'package:band_app/ui/lyrics/cubits/lyrics_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -18,6 +19,9 @@ class LyricsScreen extends StatefulWidget {
 class _LyricsScreenState extends State<LyricsScreen> {
   double _speed = 1.0;
   final ScrollController _scrollController = ScrollController();
+
+  bool _showControls = true;
+  ScrollDirection? _lastDir;
 
   // Detect lines that look like chord lines (simple heuristic)
   // bool _isChordLine(String line) {
@@ -53,137 +57,215 @@ class _LyricsScreenState extends State<LyricsScreen> {
         builder: (context, state) {
           var currentLyrics = state.lyrics[state.index];
           return Scaffold(
-            body: Stack(
-              children: [
-                NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                    SliverAppBar(
-                      floating: true,
-                      snap: true,
-                      pinned: false,
-                      // leading: IconButton(
-                      //   icon: const Icon(Icons.chevron_left_outlined),
-                      //   onPressed: () => Navigator.maybePop(context),
-                      // ),
-                      title: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            currentLyrics.title,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+            body: NotificationListener<UserScrollNotification>(
+              onNotification: (n) {
+                // direção do scroll do "scroll principal"
+                final dir = n.direction;
+
+                // ignorar idle
+                if (dir == ScrollDirection.idle) return false;
+
+                // só reage quando muda a direção (evita setState a cada pixel)
+                if (dir != _lastDir) {
+                  _lastDir = dir;
+
+                  if (dir == ScrollDirection.reverse && _showControls) {
+                    setState(() => _showControls = false); // rolando pra baixo
+                  } else if (dir == ScrollDirection.forward && !_showControls) {
+                    setState(() => _showControls = true); // rolando pra cima
+                  }
+                }
+                return false; // não bloqueia o scroll
+              },
+              child: Stack(
+                children: [
+                  NestedScrollView(
+                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        pinned: false,
+                        // leading: IconButton(
+                        //   icon: const Icon(Icons.chevron_left_outlined),
+                        //   onPressed: () => Navigator.maybePop(context),
+                        // ),
+                        title: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              currentLyrics.title,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            currentLyrics.artist,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.textTheme.bodySmall?.color
-                                  ?.withValues(alpha: 0.8),
+                            const SizedBox(height: 2),
+                            Text(
+                              currentLyrics.artist,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.textTheme.bodySmall?.color
+                                    ?.withValues(alpha: 0.8),
+                              ),
                             ),
+                          ],
+                        ),
+                        centerTitle: true,
+                        actions: [
+                          IconButton(
+                            onPressed: () {
+                              SharePlus.instance.share(
+                                ShareParams(
+                                  text:
+                                      '${currentLyrics.title} - ${currentLyrics.artist}\n\n${currentLyrics.content}',
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.share_rounded),
                           ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.settings),
+                          ),
+                          const SizedBox(width: 6),
                         ],
                       ),
-                      centerTitle: true,
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            SharePlus.instance.share(
-                              ShareParams(
-                                text:
-                                    '${currentLyrics.title} - ${currentLyrics.artist}\n\n${currentLyrics.content}',
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.share_rounded),
+                    ],
+                    body: Expanded(
+                      child: SingleChildScrollView(
+                        child: IndexedStack(
+                          index: state.index,
+                          children: state.lyrics
+                              .map((l) => LyricsWidget(lyrics: l))
+                              .toList(),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.settings),
-                        ),
-                        const SizedBox(width: 6),
-                      ],
-                    ),
-                  ],
-                  body: Expanded(
-                    child: SingleChildScrollView(
-                      child: IndexedStack(
-                        index: state.index,
-                        children: state.lyrics
-                            .map((l) => LyricsWidget(lyrics: l))
-                            .toList(),
                       ),
                     ),
                   ),
-                ),
-                // Bottom controls (tempo slider + central action)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Material(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 12,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: SliderTheme(
-                                  data: SliderTheme.of(
-                                    context,
-                                  ).copyWith(trackHeight: 4),
-                                  child: Slider(
-                                    value: _speed,
-                                    min: 0.25,
-                                    max: 2.0,
-                                    divisions: 7,
-                                    onChanged: (v) =>
-                                        setState(() => _speed = v),
-                                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedSlide(
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeOut,
+                      offset: _showControls ? Offset.zero : const Offset(0, 1),
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 180),
+                        opacity: _showControls ? 1 : 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            border: Border(
+                              top: BorderSide(
+                                color: theme.dividerColor.withValues(
+                                  alpha: 0.15,
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.play_arrow_rounded, size: 22),
-                              ),
-                            ],
+                            ),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(12.0),
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.arrow_back),
-                                onPressed: state.index > 0
-                                    ? () {
-                                        cubit.previousLyrics();
-                                      }
-                                    : null,
-                              ),
-                              Text(
-                                '${state.index + 1} / ${state.lyrics.length}',
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.arrow_forward),
-                                onPressed: state.index < state.lyrics.length - 1
-                                    ? () {
-                                        cubit.nextLyrics();
-                                      }
-                                    : null,
-                              ),
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 12,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: SliderTheme(
+                                            data: SliderTheme.of(
+                                              context,
+                                            ).copyWith(trackHeight: 4),
+                                            child: Slider(
+                                              value: _speed,
+                                              min: 0.25,
+                                              max: 2.0,
+                                              divisions: 7,
+                                              onChanged: (v) =>
+                                                  setState(() => _speed = v),
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.play_arrow_rounded,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.arrow_back),
+                                          onPressed: state.index > 0
+                                              ? () {
+                                                  cubit.previousLyrics();
+                                                }
+                                              : null,
+                                        ),
+                                        Text(
+                                          '${state.index + 1} / ${state.lyrics.length}',
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.arrow_forward),
+                                          onPressed:
+                                              state.index <
+                                                  state.lyrics.length - 1
+                                              ? () {
+                                                  cubit.nextLyrics();
+                                                }
+                                              : null,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  // Bottom controls (tempo slider + central action)
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: Container(
+                  //     margin: const EdgeInsets.only(
+                  //       bottom: 16,
+                  //       left: 16,
+                  //       right: 16,
+                  //     ),
+                  //     decoration: BoxDecoration(
+                  //       color: theme.colorScheme.surfaceContainerHighest,
+                  //       border: Border(
+                  //         top: BorderSide(
+                  //           color: theme.dividerColor.withValues(alpha: 0.15),
+                  //         ),
+                  //       ),
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //     ),
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(
+                  //         horizontal: 18,
+                  //         vertical: 12,
+                  //       ),
+                  //       child: Container(),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           );
         },
