@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config/config.dart';
 import '../../data/repositories/repositories.dart';
 import '../../domain/models/lyrics/lyrics.dart';
 import '../../domain/models/repertoire_day/music.dart';
@@ -40,7 +41,8 @@ class RepertoireDayModule implements FeatureModule {
         () => UpdateMusicOnEventCubit(di<UpdateMusicOnEventRepository>()),
       )
       ..registerFactory<RepertoireDayCubit>(
-        () => RepertoireDayCubit(di<RepertoireDayRepository>()),
+        () =>
+            RepertoireDayCubit(di<RepertoireDayRepository>(), di<AppConfig>()),
       );
   }
 
@@ -69,6 +71,7 @@ class RepertoireDayModule implements FeatureModule {
         value: EventSelectedCubit(
           EventSelectedInitialState(state.extra as String),
           GetIt.I<EventSelectedRepository>(),
+          GetIt.I<AppConfig>(),
         ),
         child: const EventSelectedScreen(),
       ),

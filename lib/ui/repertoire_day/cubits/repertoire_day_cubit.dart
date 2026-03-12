@@ -1,12 +1,16 @@
+import 'package:band_app/config/config.dart';
 import 'package:band_app/data/repositories/repertoire_day/repertoire_day_repository.dart';
 import 'package:band_app/ui/repertoire_day/cubits/repertoire_day_state.dart';
 import 'package:band_app/utils/result.dart';
 import 'package:bloc/bloc.dart';
 
 class RepertoireDayCubit extends Cubit<RepertoireDayState> {
-  RepertoireDayCubit(this._repertoireDayRepository)
+  RepertoireDayCubit(this._repertoireDayRepository, this._appConfig)
     : super(RepertoireDayInitial());
   final RepertoireDayRepository _repertoireDayRepository;
+  final AppConfig _appConfig;
+
+  bool get isAdm => _appConfig.isAdm;
 
   Future<void> fetchRepertoireDays() async {
     emit(RepertoireDayLoading());
