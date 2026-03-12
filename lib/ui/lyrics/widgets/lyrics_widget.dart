@@ -14,7 +14,7 @@ class LyricsWidget extends StatelessWidget {
         children: [
           SizedBox(height: 16),
           Text(lyrics.content, style: TextStyle(fontSize: 20)),
-          SizedBox(height: 16),
+          SizedBox(height: 150),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:band_app/ui/lyrics/cubits/lyrics_cubit.dart';
 import 'package:band_app/ui/lyrics/cubits/lyrics_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -19,9 +20,12 @@ class LyricsScreen extends StatefulWidget {
 class _LyricsScreenState extends State<LyricsScreen> {
   double _speed = 1.0;
   final ScrollController _scrollController = ScrollController();
-
   bool _showControls = true;
   ScrollDirection? _lastDir;
+  bool _isPlaying = false;
+  late final Ticker _ticker;
+  Duration? _lastTickElapsed;
+  static const double _baseScrollSpeed = 10.0;
 
   // Detect lines that look like chord lines (simple heuristic)
   // bool _isChordLine(String line) {
@@ -40,9 +44,52 @@ class _LyricsScreenState extends State<LyricsScreen> {
   // }
 
   @override
+  void initState() {
+    super.initState();
+    _ticker = Ticker(_onTick);
+  }
+
+  @override
   void dispose() {
+    _ticker.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onTick(Duration elapsed) {
+    if (!_isPlaying) return;
+    if (_lastTickElapsed != null) {
+      final delta = elapsed - _lastTickElapsed!;
+      final dt = delta.inMilliseconds / 500.0;
+      final pixels = _baseScrollSpeed * _speed * dt;
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      double newOffset = _scrollController.offset + pixels;
+      if (newOffset > maxScroll) {
+        newOffset = maxScroll;
+        _stopScroll();
+        return;
+      }
+      _scrollController.jumpTo(newOffset);
+    }
+    _lastTickElapsed = elapsed;
+  }
+
+  void _startScroll() {
+    if (_isPlaying) return;
+    _lastTickElapsed = null;
+    setState(() {
+      _isPlaying = true;
+    });
+    _ticker.start();
+  }
+
+  void _stopScroll() {
+    if (!_isPlaying) return;
+    _lastTickElapsed = null;
+    setState(() {
+      _isPlaying = false;
+    });
+    _ticker.stop();
   }
 
   @override
@@ -59,23 +106,17 @@ class _LyricsScreenState extends State<LyricsScreen> {
           return Scaffold(
             body: NotificationListener<UserScrollNotification>(
               onNotification: (n) {
-                // direção do scroll do "scroll principal"
                 final dir = n.direction;
-
-                // ignorar idle
                 if (dir == ScrollDirection.idle) return false;
-
-                // só reage quando muda a direção (evita setState a cada pixel)
                 if (dir != _lastDir) {
                   _lastDir = dir;
-
                   if (dir == ScrollDirection.reverse && _showControls) {
-                    setState(() => _showControls = false); // rolando pra baixo
+                    setState(() => _showControls = false);
                   } else if (dir == ScrollDirection.forward && !_showControls) {
-                    setState(() => _showControls = true); // rolando pra cima
+                    setState(() => _showControls = true);
                   }
                 }
-                return false; // não bloqueia o scroll
+                return false;
               },
               child: Stack(
                 children: [
@@ -85,10 +126,6 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         floating: true,
                         snap: true,
                         pinned: false,
-                        // leading: IconButton(
-                        //   icon: const Icon(Icons.chevron_left_outlined),
-                        //   onPressed: () => Navigator.maybePop(context),
-                        // ),
                         title: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -129,14 +166,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         ],
                       ),
                     ],
-                    body: Expanded(
-                      child: SingleChildScrollView(
-                        child: IndexedStack(
-                          index: state.index,
-                          children: state.lyrics
-                              .map((l) => LyricsWidget(lyrics: l))
-                              .toList(),
-                        ),
+                    body: SingleChildScrollView(
+                      controller: _scrollController,
+                      child: IndexedStack(
+                        index: state.index,
+                        children: state.lyrics
+                            .map((l) => LyricsWidget(lyrics: l))
+                            .toList(),
                       ),
                     ),
                   ),
@@ -187,15 +223,29 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                               min: 0.25,
                                               max: 2.0,
                                               divisions: 7,
-                                              onChanged: (v) =>
-                                                  setState(() => _speed = v),
+                                              onChanged: (v) {
+                                                setState(() => _speed = v);
+                                                if (_isPlaying) {
+                                                  // Atualiza a velocidade em tempo real
+                                                  _ticker.stop();
+                                                  _ticker.start();
+                                                }
+                                              },
                                             ),
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            if (_isPlaying) {
+                                              _stopScroll();
+                                            } else {
+                                              _startScroll();
+                                            }
+                                          },
                                           icon: Icon(
-                                            Icons.play_arrow_rounded,
+                                            _isPlaying
+                                                ? Icons.pause_rounded
+                                                : Icons.play_arrow_rounded,
                                             size: 22,
                                           ),
                                         ),
@@ -210,6 +260,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                           onPressed: state.index > 0
                                               ? () {
                                                   cubit.previousLyrics();
+                                                  _scrollController.jumpTo(0);
+                                                  _stopScroll();
                                                 }
                                               : null,
                                         ),
@@ -223,6 +275,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                                   state.lyrics.length - 1
                                               ? () {
                                                   cubit.nextLyrics();
+                                                  _scrollController.jumpTo(0);
+                                                  _stopScroll();
                                                 }
                                               : null,
                                         ),
@@ -237,33 +291,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                       ),
                     ),
                   ),
-                  // Bottom controls (tempo slider + central action)
-                  // Align(
-                  //   alignment: Alignment.bottomCenter,
-                  //   child: Container(
-                  //     margin: const EdgeInsets.only(
-                  //       bottom: 16,
-                  //       left: 16,
-                  //       right: 16,
-                  //     ),
-                  //     decoration: BoxDecoration(
-                  //       color: theme.colorScheme.surfaceContainerHighest,
-                  //       border: Border(
-                  //         top: BorderSide(
-                  //           color: theme.dividerColor.withValues(alpha: 0.15),
-                  //         ),
-                  //       ),
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //     ),
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.symmetric(
-                  //         horizontal: 18,
-                  //         vertical: 12,
-                  //       ),
-                  //       child: Container(),
-                  //     ),
-                  //   ),
-                  // ),
+                  // ...existing code...
                 ],
               ),
             ),
