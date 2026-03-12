@@ -46,16 +46,18 @@ class _RepertoireDayScreenState extends State<RepertoireDayScreen> {
           return const Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final needUpdate =
-              await context.pushNamed<bool>('create-event') ?? false;
-          if (needUpdate) {
-            cubit.fetchRepertoireDays();
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: cubit.isAdm
+          ? FloatingActionButton(
+              onPressed: () async {
+                final needUpdate =
+                    await context.pushNamed<bool>('create-event') ?? false;
+                if (needUpdate) {
+                  cubit.fetchRepertoireDays();
+                }
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

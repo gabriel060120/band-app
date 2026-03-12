@@ -62,7 +62,7 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                               Text(
                                 'Igreja',
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.purpleAccent,
+                                  color: Colors.blueAccent,
                                   fontSize: 18,
                                 ),
                               ),
@@ -169,11 +169,25 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                                         ),
                                   ),
                                   const SizedBox(width: 8),
-                                  IconButton(
-                                    icon: Icon(Icons.add),
-                                    color: Colors.grey.shade300,
-                                    onPressed: () {},
-                                  ),
+                                  if (cubit.isAdm)
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      color: Colors.grey.shade300,
+                                      onPressed: () async {
+                                        final result = await context
+                                            .pushNamed<bool>(
+                                              'update-music-on-event',
+                                              extra: state.eventData.musics,
+                                              pathParameters: {
+                                                'eventId':
+                                                    state.eventData.eventDay.id,
+                                              },
+                                            );
+                                        if (result == true) {
+                                          cubit.fetchEventData();
+                                        }
+                                      },
+                                    ),
                                 ],
                               ),
                               Container(

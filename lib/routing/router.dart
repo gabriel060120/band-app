@@ -7,7 +7,22 @@ GoRouter buildRouter(List<FeatureModule> modules) {
     initialLocation: '/splash',
     routes: [
       ShellRoute(
-        builder: (_, __, child) => child,
+        builder: (_, __, child) => Scaffold(
+          body: child,
+          // bottomNavigationBar: BottomNavigationBar(
+          //   items: [
+          //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+          //     BottomNavigationBarItem(
+          //       icon: Icon(Icons.library_music),
+          //       label: 'Músicas',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: Icon(Icons.settings),
+          //       label: 'Configurações',
+          //     ),
+          //   ],
+          // ),
+        ),
         routes: modules.expand((m) => m.routes()).toList(),
       ),
       GoRoute(path: '/404', builder: (_, __) => const _NotFound()),
