@@ -169,7 +169,12 @@ class _ChordsScreenState extends State<ChordsScreen> {
                       child: IndexedStack(
                         index: state.index,
                         children: state.chords
-                            .map((c) => ChordsWidget(chords: c))
+                            .map(
+                              (c) => ChordsWidget(
+                                chords: c,
+                                transpose: state.transpose,
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
@@ -280,6 +285,55 @@ class _ChordsScreenState extends State<ChordsScreen> {
                                         ),
                                       ],
                                     ),
+                                    // Row(
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.center,
+                                    //   children: [
+                                    //     IconButton(
+                                    //       icon: const Icon(
+                                    //         Icons.arrow_downward,
+                                    //         size: 18,
+                                    //       ),
+                                    //       tooltip: 'Transpor -1',
+                                    //       onPressed: () =>
+                                    //           cubit.transposeDown(),
+                                    //     ),
+                                    //     GestureDetector(
+                                    //       onLongPress: () =>
+                                    //           cubit.resetTranspose(),
+                                    //       child: Container(
+                                    //         constraints: const BoxConstraints(
+                                    //           minWidth: 48,
+                                    //         ),
+                                    //         alignment: Alignment.center,
+                                    //         child: Text(
+                                    //           state.transpose == 0
+                                    //               ? 'Tom'
+                                    //               : (state.transpose > 0
+                                    //                     ? '+${state.transpose}'
+                                    //                     : '${state.transpose}'),
+                                    //           style: Theme.of(context)
+                                    //               .textTheme
+                                    //               .bodySmall
+                                    //               ?.copyWith(
+                                    //                 fontWeight:
+                                    //                     state.transpose != 0
+                                    //                     ? FontWeight.bold
+                                    //                     : FontWeight.normal,
+                                    //               ),
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //     IconButton(
+                                    //       icon: const Icon(
+                                    //         Icons.arrow_upward,
+                                    //         size: 18,
+                                    //       ),
+                                    //       tooltip: 'Transpor +1',
+                                    //       onPressed: () => cubit.transposeUp(),
+                                    //     ),
+                                    //   ],
+                                    // ),
                                   ],
                                 ),
                               ],

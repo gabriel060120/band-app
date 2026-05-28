@@ -3,7 +3,9 @@ import 'package:band_app/domain/models/chords/chords.dart';
 abstract class ChordsState {
   final int index;
   final List<Chords> chords;
-  ChordsState(this.index, this.chords);
+  final int transpose;
+
+  ChordsState(this.index, this.chords, {this.transpose = 0});
 }
 
 class ChordsInitial extends ChordsState {
@@ -11,7 +13,7 @@ class ChordsInitial extends ChordsState {
 }
 
 class ChordsLoaded extends ChordsState {
-  ChordsLoaded(super.index, super.chords);
+  ChordsLoaded(super.index, super.chords, {super.transpose});
 }
 
 class ChordsError extends ChordsState {
