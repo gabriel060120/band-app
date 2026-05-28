@@ -22,7 +22,7 @@ class UpdateMusicOnEventRepository {
               name: m['name'] ?? '',
               artist: m['artist'] ?? '',
               lyrics: [],
-              ciphers: [],
+              chords: [],
               order: 0,
             ),
           )

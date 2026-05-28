@@ -1,4 +1,4 @@
-import 'package:band_app/domain/models/cipher/cipher.dart';
+import 'package:band_app/domain/models/chords/chords.dart';
 import 'package:band_app/domain/models/lyrics/lyrics.dart';
 
 class Music {
@@ -6,14 +6,14 @@ class Music {
   String name;
   String artist;
   List<Lyrics> lyrics;
-  List<Cipher> ciphers;
+  List<Chords> chords;
   int order;
   Music({
     required this.id,
     required this.name,
     required this.artist,
     required this.lyrics,
-    required this.ciphers,
+    required this.chords,
     required this.order,
   });
 
@@ -22,7 +22,7 @@ class Music {
     String? name,
     String? artist,
     List<Lyrics>? lyrics,
-    List<Cipher>? ciphers,
+    List<Chords>? chords,
     int? order,
   }) {
     return Music(
@@ -30,7 +30,7 @@ class Music {
       name: name ?? this.name,
       artist: artist ?? this.artist,
       lyrics: lyrics ?? this.lyrics,
-      ciphers: ciphers ?? this.ciphers,
+      chords: chords ?? this.chords,
       order: order ?? this.order,
     );
   }
@@ -46,7 +46,12 @@ class Music {
               Lyrics.fromMap(lyricsMap, artist: map['music']?['artist'] ?? ''),
         ),
       ),
-      ciphers: [],
+      chords: List<Chords>.from(
+        (map['music']['chords'] ?? []).map<Chords>(
+          (chordsMap) =>
+              Chords.fromMap(chordsMap, artist: map['music']?['artist'] ?? ''),
+        ),
+      ),
       order: map['order'] ?? 0,
       // List<Cipher>.from(
       // (map['ciphers'] ?? []).map<Cipher>(

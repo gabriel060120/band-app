@@ -308,7 +308,7 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                                 onPressed: () {
                                   final lyrics = cubit.selectLyrics();
                                   context.pushNamed(
-                                    'lyrics_list',
+                                    'lyrics_show',
                                     extra: lyrics,
                                   );
                                 },
@@ -342,7 +342,13 @@ class _EventSelectedScreenState extends State<EventSelectedScreen> {
                             const SizedBox(width: 16),
                             Expanded(
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  final chords = cubit.selectChords();
+                                  context.pushNamed(
+                                    'chords_show',
+                                    extra: chords,
+                                  );
+                                },
                                 borderRadius: BorderRadius.circular(28),
                                 child: Container(
                                   decoration: BoxDecoration(

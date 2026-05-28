@@ -1,5 +1,6 @@
 import 'package:band_app/config/config.dart';
 import 'package:band_app/data/repositories/repertoire_day/event_selected_repository.dart';
+import 'package:band_app/domain/models/chords/chords.dart';
 import 'package:band_app/domain/models/lyrics/lyrics.dart';
 import 'package:band_app/ui/repertoire_day/cubits/event_selected_state.dart';
 import 'package:band_app/utils/result.dart';
@@ -28,7 +29,7 @@ class EventSelectedCubit extends Cubit<EventSelectedState> {
     if (state is EventSelectedLoadedState) {
       final currentState = state as EventSelectedLoadedState;
       return currentState.eventData.musics.any(
-        (music) => music.ciphers.isNotEmpty,
+        (music) => music.chords.isNotEmpty,
       );
     }
     return false;
@@ -39,6 +40,14 @@ class EventSelectedCubit extends Cubit<EventSelectedState> {
     return currentState.eventData.musics
         .where((music) => music.lyrics.isNotEmpty)
         .map((music) => music.lyrics.first)
+        .toList();
+  }
+
+  List<Chords> selectChords() {
+    final currentState = state as EventSelectedLoadedState;
+    return currentState.eventData.musics
+        .where((music) => music.chords.isNotEmpty)
+        .map((music) => music.chords.first)
         .toList();
   }
 
