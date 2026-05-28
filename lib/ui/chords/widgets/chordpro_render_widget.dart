@@ -113,7 +113,7 @@ class _LyricRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.end,
+      crossAxisAlignment: WrapCrossAlignment.start,
       children: tokens.map((token) {
         final chord = token.chord != null
             ? ChordTransposer.transposeChord(token.chord!, transpose)
