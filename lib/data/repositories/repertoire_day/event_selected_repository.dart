@@ -23,7 +23,7 @@ class EventSelectedRepository {
           name,
           artist,
           lyrics(*),
-          cipher(*)
+          chords(*)
         )
       )
     ''')

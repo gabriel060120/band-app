@@ -1,6 +1,8 @@
 import 'package:band_app/data/repositories/repertoire_day/update_music_on_event_repository.dart';
 import 'package:band_app/data/services/api/api_client.dart';
+import 'package:band_app/domain/models/chords/chords.dart';
 import 'package:band_app/routing/routing.dart';
+import 'package:band_app/ui/chords/chords.dart';
 import 'package:band_app/ui/repertoire_day/widgets/widgets.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,10 +91,18 @@ class RepertoireDayModule implements FeatureModule {
     ),
     GoRoute(
       path: '/lyrics',
-      name: 'lyrics_list',
+      name: 'lyrics_show',
       builder: (context, state) => BlocProvider<LyricsCubit>.value(
         value: LyricsCubit(state.extra as List<Lyrics>),
         child: const LyricsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/chords',
+      name: 'chords_show',
+      builder: (context, state) => BlocProvider<ChordsCubit>.value(
+        value: ChordsCubit(state.extra as List<Chords>),
+        child: const ChordsScreen(),
       ),
     ),
     GoRoute(

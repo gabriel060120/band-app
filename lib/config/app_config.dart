@@ -1,3 +1,3 @@
 class AppConfig {
-  final isAdm = false;
+  final isAdm = true;
 }
